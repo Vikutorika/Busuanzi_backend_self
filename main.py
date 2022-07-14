@@ -12,7 +12,7 @@ from pv import pv
 from uv import ip_in_and_conter_out
 
 REDIS_URL = os.environ.get('REDIS_URL')
-password, host, port = redisURL.replace(
+password, host, port = REDIS_URL.replace(
     'redis://', '').replace('@', '|').replace(':', '|').split('|')
 
 r = redis.Redis(host=host, port=port, password=password, ssl=True, db=0)
