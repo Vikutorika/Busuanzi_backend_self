@@ -11,11 +11,11 @@ from get_before_data import get_before_data
 from pv import pv
 from uv import ip_in_and_conter_out
 
-chmod_redis = "chmod 755 ./redis-server"
+REDIS_URL = os.environ.get('REDIS_URL')
+password, host, port = redisURL.replace(
+    'redis://', '').replace('@', '|').replace(':', '|').split('|')
 
-start_redis = "./redis-server redis.conf"
-
-r = redis.Redis(host='127.0.0.1', port=6379, db=0)
+r = redis.Redis(host=host, port=port, password=password, ssl=True, db=0)
 
 app = FastAPI(docs_url=None, redoc_url=None)
 
@@ -52,9 +52,5 @@ def root(request: Request,
 
 
 if __name__ == "__main__":
-    print("chmod redis")
-    subprocess.run(chmod_redis, shell=True)
-    print("start redis")
-    subprocess.Popen(start_redis, shell=True)
     print("start uvicorn")
     uvicorn.run("main:app", host="0.0.0.0", port=8080, log_level="info", proxy_headers=True, forwarded_allow_ips="*")
